@@ -1,28 +1,27 @@
-name: Bandit
+name: Run Tests
 
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-
-  analyze:
-
+  test:
     runs-on: ubuntu-latest
 
-    permissions:
-
-      # required for all workflows
-
-      security-events: write
-
-      # only required for workflows in private repositories
-
-      actions: read
-
-      contents: read
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Perform Bandit Analysis
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-        uses: PyCQA/bandit-action@v1
- 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
